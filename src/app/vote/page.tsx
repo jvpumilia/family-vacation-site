@@ -48,8 +48,8 @@ export default async function VotePage() {
       <div>
         <h1 className="font-serif text-3xl text-amber-950">Vote</h1>
         <p className="mt-2 text-sm text-amber-800/75">
-          Rank finalized qualifying lodgings. Destinations with 0 qualifying lodging cannot receive
-          votes. Aggregate uses Borda count.
+          Rank finalized qualifying lodgings (real bedrooms confirmed). Destinations with 0 qualifying
+          lodging cannot receive votes. Aggregate uses Borda count.
         </p>
       </div>
 

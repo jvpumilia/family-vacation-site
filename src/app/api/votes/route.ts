@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     });
     if (lodgings.length !== lodgingIds.length) {
       return NextResponse.json(
-        { error: "All ranked items must be finalized qualifying lodgings on the ballot" },
+        { error: "All ranked items must be finalized qualifying lodgings (real BR confirmed) on the ballot" },
         { status: 400 }
       );
     }

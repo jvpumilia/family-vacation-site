@@ -17,8 +17,9 @@ export default async function SubmitPage() {
       <div>
         <h1 className="font-serif text-3xl text-amber-950">Submit lodging</h1>
         <p className="mt-2 text-sm text-amber-800/75">
-          Paste an Airbnb/VRBO/manager URL, extract OG if possible, then confirm bedrooms. You can add
-          many; later finalize exactly 2 for the ballot. Public cards never show your name.
+          Paste an Airbnb/VRBO/manager URL, extract OG if possible, then confirm real bedrooms (required
+          for ballot eligibility). You can add many; later finalize exactly 2 for the ballot. Public
+          cards never show your name.
         </p>
       </div>
       {!user ? <LoginForm /> : <SubmitForm destinations={destinations} />}

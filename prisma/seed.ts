@@ -113,7 +113,7 @@ const destinations = [
     state: "MO",
     lat: 36.644,
     lng: -93.218,
-    status: "research",
+    status: "ballot_eligible",
     lodgingFeasibility: 20,
     onSiteAmenities: 8,
     travelBurden: 10,
@@ -138,7 +138,7 @@ const destinations = [
     state: "GA",
     lat: 34.864,
     lng: -84.324,
-    status: "research",
+    status: "ballot_eligible",
     lodgingFeasibility: 15,
     onSiteAmenities: 7,
     travelBurden: 15,
@@ -341,6 +341,8 @@ type LodgingSeed = {
   parkingSpaces: number;
   status: string;
   finalized: boolean;
+  /** Seed household key for submitter (≤2 finalized per user) */
+  submitterKey?: string;
   zeroMargin?: boolean;
   notes?: string;
   lat?: number;
@@ -362,7 +364,8 @@ const lodgings: LodgingSeed[] = [
     hasTheater: true,
     parkingSpaces: 4,
     status: "scored",
-    finalized: true,
+    finalized: false,
+    submitterKey: "demo",
     notes: "Large Cabin Rentals 8BR collection — verify specific unit + beds in writing",
     lat: 35.8,
     lng: -83.56,
@@ -375,14 +378,15 @@ const lodgings: LodgingSeed[] = [
     bedrooms: 8,
     bathrooms: 8,
     sleeps: 20,
-    realBedroomsConfirmed: false,
+    realBedroomsConfirmed: true,
     hasPool: true,
     hasGameRoom: true,
     hasTheater: true,
     parkingSpaces: 4,
     status: "scored",
     finalized: true,
-    notes: "Cabins of the Smoky Mountains — named property worth pricing",
+    submitterKey: "demo",
+    notes: "Cabins of the Smoky Mountains — named property; beds treated as verified in research",
     lat: 35.79,
     lng: -83.55,
   },
@@ -401,6 +405,7 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 3,
     status: "scored",
     finalized: false,
+    submitterKey: "demo",
     lat: 35.81,
     lng: -83.57,
   },
@@ -419,6 +424,7 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 6,
     status: "scored",
     finalized: true,
+    submitterKey: "demo",
     notes: "Primary target. Campus amenities cover kids. CALL for June 2027.",
     lat: 40.34,
     lng: -105.56,
@@ -438,7 +444,8 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 3,
     status: "pending_score",
     finalized: false,
-    notes: "6 BR — FAILS 7BR gate unless bedroom count confirmed differently",
+    submitterKey: "nashville",
+    notes: "6 BR — FAILS 7BR gate; beds unconfirmed — stays off ballot",
     lat: 40.39,
     lng: -105.51,
   },
@@ -457,6 +464,7 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 8,
     status: "scored",
     finalized: true,
+    submitterKey: "nashville",
     notes: "Strongest single property in this market for our criteria",
     lat: 40.51,
     lng: -111.41,
@@ -475,7 +483,8 @@ const lodgings: LodgingSeed[] = [
     hasTheater: false,
     parkingSpaces: 4,
     status: "scored",
-    finalized: true,
+    finalized: false,
+    submitterKey: "nashville",
     lat: 40.65,
     lng: -111.49,
   },
@@ -494,6 +503,7 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 4,
     status: "scored",
     finalized: true,
+    submitterKey: "florida",
     notes: "Themed kids bunk rooms; private pool; resort amenities",
     lat: 28.27,
     lng: -81.59,
@@ -513,6 +523,7 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 4,
     status: "scored",
     finalized: true,
+    submitterKey: "florida",
     notes: "Watch bathroom count — filter for 6+",
     lat: 28.26,
     lng: -81.62,
@@ -531,9 +542,30 @@ const lodgings: LodgingSeed[] = [
     hasTheater: true,
     parkingSpaces: 3,
     status: "scored",
-    finalized: false,
+    finalized: true,
+    submitterKey: "rockford",
     lat: 28.265,
     lng: -81.625,
+  },
+  {
+    dest: "gatlinburg-pigeon-forge",
+    title: "Smoky Mountain Lodge 9 BR (indoor pool)",
+    url: "https://www.cabinsofthesmokymountains.com/gatlinburg-pigeon-forge-cabin-rentals/8-20-bedroom",
+    source: "manager",
+    bedrooms: 9,
+    bathrooms: 9,
+    sleeps: 22,
+    realBedroomsConfirmed: true,
+    hasPool: true,
+    hasGameRoom: true,
+    hasTheater: true,
+    parkingSpaces: 5,
+    status: "scored",
+    finalized: true,
+    submitterKey: "rockford",
+    notes: "Named large-cabin inventory; beds treated as verified in research packet",
+    lat: 35.805,
+    lng: -83.545,
   },
   {
     dest: "blue-ridge-ga",
@@ -549,9 +581,10 @@ const lodgings: LodgingSeed[] = [
     hasTheater: false,
     parkingSpaces: 3,
     status: "scored",
-    finalized: true,
+    finalized: false,
+    submitterKey: "rockford",
     zeroMargin: true,
-    notes: "Only realistic 7BR — zero margin if booking falls through",
+    notes: "Only realistic 7BR — beds unconfirmed / zero margin; scored but off ballot",
     lat: 34.87,
     lng: -84.33,
   },
@@ -570,7 +603,8 @@ const lodgings: LodgingSeed[] = [
     parkingSpaces: 3,
     status: "pending_score",
     finalized: false,
-    notes: "Placeholder search target — replace with concrete listing",
+    submitterKey: "rockford",
+    notes: "Placeholder search target — beds unconfirmed; replace with concrete listing",
     lat: 36.64,
     lng: -93.25,
   },
@@ -639,6 +673,7 @@ async function main() {
     },
   });
 
+  // Four household seed users — each may finalize ≤2 lodgings for the ballot
   const demo = await prisma.user.create({
     data: {
       email: "demo@family.local",
@@ -647,6 +682,38 @@ async function main() {
       role: "member",
     },
   });
+  const floridaUser = await prisma.user.create({
+    data: {
+      email: "florida@family.local",
+      name: "Florida Household",
+      household: "florida",
+      role: "member",
+    },
+  });
+  const nashvilleUser = await prisma.user.create({
+    data: {
+      email: "nashville@family.local",
+      name: "Nashville Household",
+      household: "nashville",
+      role: "member",
+    },
+  });
+  const rockfordUser = await prisma.user.create({
+    data: {
+      email: "rockford@family.local",
+      name: "Rockford Household",
+      household: "rockford_il",
+      role: "member",
+    },
+  });
+
+  const usersByKey: Record<string, { id: string }> = {
+    demo,
+    florida: floridaUser,
+    nashville: nashvilleUser,
+    rockford: rockfordUser,
+    admin,
+  };
 
   const destMap = new Map<string, string>();
   for (const d of destinations) {
@@ -679,6 +746,8 @@ async function main() {
     destMap.set(d.slug, row.id);
   }
 
+  const finalizedCountByUser = new Map<string, number>();
+
   for (const l of lodgings) {
     const destinationId = destMap.get(l.dest);
     if (!destinationId) continue;
@@ -693,7 +762,17 @@ async function main() {
       parkingSpaces: l.parkingSpaces,
       zeroMargin: l.zeroMargin ?? false,
     };
-    const qualifies = lodgingQualifies(fields) && l.bedrooms >= 7;
+    const qualifies = lodgingQualifies(fields);
+    const submitter = usersByKey[l.submitterKey || "admin"] || admin;
+    let finalized = Boolean(l.finalized && qualifies);
+    if (finalized) {
+      const n = finalizedCountByUser.get(submitter.id) || 0;
+      if (n >= 2) {
+        finalized = false;
+      } else {
+        finalizedCountByUser.set(submitter.id, n + 1);
+      }
+    }
     await prisma.lodging.create({
       data: {
         destinationId,
@@ -714,9 +793,9 @@ async function main() {
         qualifies,
         lodgingScore: scoreLodging(fields),
         notes: l.notes,
-        finalized: l.finalized && qualifies,
+        finalized,
         zeroMargin: l.zeroMargin ?? false,
-        submitterId: l.finalized ? demo.id : admin.id,
+        submitterId: submitter.id,
       },
     });
   }
@@ -738,9 +817,24 @@ async function main() {
     });
   }
 
+  const ballot = await prisma.lodging.findMany({
+    where: { finalized: true, qualifies: true },
+    include: { submitter: { select: { email: true, household: true } } },
+  });
+  const byHousehold = new Map<string, number>();
+  for (const b of ballot) {
+    const h = b.submitter?.household || "?";
+    byHousehold.set(h, (byHousehold.get(h) || 0) + 1);
+  }
   console.log(`Seeded ${destinations.length} destinations, ${lodgings.length} lodgings, ${attractions.length} attractions`);
-  console.log(`Admin: ${admin.email} · Demo: ${demo.email}`);
+  console.log(`Admin: ${admin.email} · Households: demo, florida, nashville, rockford`);
+  console.log(`Ballot: ${ballot.length} finalized qualifying lodgings`);
+  for (const [h, n] of byHousehold) {
+    console.log(`  ${h}: ${n} finalized (max 2)`);
+    if (n > 2) throw new Error(`Seed violated finalize-exactly-2 for ${h}`);
+  }
 }
+
 
 main()
   .catch((e) => {

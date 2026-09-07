@@ -70,8 +70,8 @@ export function VoteClient({
   if (!gated.length) {
     return (
       <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-        No ballot options yet. Destinations need at least one finalized qualifying lodging (≥7 BR,
-        sleeps 14+).
+        No ballot options yet. Destinations need at least one finalized qualifying lodging (≥7 real BR
+        confirmed, sleeps 14+). Unconfirmed bedroom counts cannot be voted.
       </p>
     );
   }

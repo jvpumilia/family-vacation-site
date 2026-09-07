@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { lodgingQualifies } from "@/lib/scoring";
 
 const schema = z.object({
   lodgingIds: z.array(z.string()).length(2),
@@ -23,9 +24,21 @@ export async function POST(req: Request) {
       );
     }
     for (const l of mine) {
-      if (!l.qualifies) {
+      const ok =
+        l.qualifies &&
+        lodgingQualifies({
+          bedrooms: l.bedrooms,
+          sleeps: l.sleeps,
+          realBedroomsConfirmed: l.realBedroomsConfirmed,
+          hasPool: l.hasPool,
+          hasGameRoom: l.hasGameRoom,
+          hasTheater: l.hasTheater,
+        });
+      if (!ok) {
         return NextResponse.json(
-          { error: `"${l.title}" does not qualify (≥7 real BR, sleeps 14+).` },
+          {
+            error: `"${l.title}" does not qualify (≥7 real BR confirmed, sleeps 14+). Unconfirmed bedroom counts cannot be finalized.`,
+          },
           { status: 400 }
         );
       }

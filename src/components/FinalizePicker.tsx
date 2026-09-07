@@ -47,7 +47,7 @@ export function FinalizePicker({ items }: { items: Item[] }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-amber-900/80">
-        Pick exactly <strong>2</strong> to finalize for the family ballot ({selected.length}/2).
+        Pick exactly <strong>2</strong> qualifying lodgings (real BR confirmed) for the family ballot ({selected.length}/2).
       </p>
       <ul className="space-y-2">
         {items.map((i) => (

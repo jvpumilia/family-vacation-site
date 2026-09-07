@@ -66,4 +66,4 @@ Deploy on Vercel free tier. Prefer Postgres over SQLite on serverless.
 
 ## Hard lodging rules
 
-At least 7 real bedrooms, sleeps 14+, prefer pool/game/theater, 6+ baths, 3+ parking.
+At least 7 real bedrooms confirmed (hard gate — unconfirmed cannot qualify/vote), sleeps 14+, prefer pool/game/theater, 6+ baths, 3+ parking.

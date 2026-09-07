@@ -135,7 +135,7 @@ export function SubmitForm({ destinations }: { destinations: Dest[] }) {
 
       <div className="grid gap-2 text-sm sm:grid-cols-2">
         {[
-          ["realBedroomsConfirmed", "7+ real BR confirmed (no pullouts)"],
+          ["realBedroomsConfirmed", "Required: 7+ real BR confirmed (no pullouts) — needed to qualify/vote"],
           ["hasPool", "Private / indoor pool"],
           ["hasGameRoom", "Game room"],
           ["hasTheater", "Theater"],
@@ -164,7 +164,7 @@ export function SubmitForm({ destinations }: { destinations: Dest[] }) {
       </label>
 
       <p className="text-xs text-amber-800/70">
-        Hard rules: ≥7 enclosed bedrooms, sleeps 14+, prefer 6+ baths & parking for 3 cars. Listing enters{" "}
+        Hard rules: ≥7 enclosed bedrooms with real beds confirmed, sleeps 14+. Unconfirmed counts cannot qualify or be voted. Prefer 6+ baths & parking for 3 cars. Listing enters{" "}
         <em>pending score</em> queue. Public cards never show your name.
       </p>
 

@@ -49,10 +49,11 @@ export type LodgingFields = {
   zeroMargin?: boolean;
 };
 
-/** Hard gate: ≥7 real BR, sleeps 14+, confirmed when possible */
+/** Hard gate: ≥7 real BR confirmed, sleeps 14+. Unconfirmed bedroom counts cannot qualify or be voted. */
 export function lodgingQualifies(l: LodgingFields) {
   if (l.bedrooms < 7) return false;
   if (l.sleeps < 14) return false;
+  if (!l.realBedroomsConfirmed) return false;
   return true;
 }
 
