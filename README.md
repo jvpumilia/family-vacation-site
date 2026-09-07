@@ -2,8 +2,7 @@
 
 Shareable family voting app for a 14-person June 2027 trip (kids 11/8/4/2). Book lodging by 2026-09-30.
 
-Stack: Next.js App Router + TypeScript + Tailwind + Leaflet/OSM + Prisma + SQLite.
-Clear path to Postgres/Supabase for production.
+Stack: Next.js App Router + TypeScript + Tailwind + Leaflet/OSM + Prisma + PostgreSQL (Supabase/Neon).
 
 ## Features
 
@@ -44,15 +43,19 @@ Research: Hilton Head, Destin/30A, WI Dells, OBX, Zion, San Diego, Yellowstone.
 
 ## Env
 
-DATABASE_URL (default file:../data/dev.db)
+DATABASE_URL — pooled Postgres URL (required)
+DIRECT_URL — non-pooling URL for migrations / prisma db push
 SESSION_SECRET
 ADMIN_EMAIL
 NEXT_PUBLIC_APP_NAME
 
+## Local database
+
+Use Postgres locally (Neon free branch, Docker Postgres, or Supabase). Copy .env.example to .env and set DATABASE_URL + DIRECT_URL.
 ## Production
 
-Change Prisma provider to postgresql, point DATABASE_URL at Supabase, migrate + seed.
-Deploy on Vercel free tier. Prefer Postgres over SQLite on serverless.
+Deploy on Vercel with DATABASE_URL (pooled) + DIRECT_URL (direct) from Supabase or Neon; run prisma db push + seed.
+
 
 ## Pages
 
