@@ -39,8 +39,8 @@ Sign in with any email. Admin default: joe@example.com
 6 Overflow 5
 7 June cost/conditions 10
 
-Claude top 6: Gatlinburg/PF 89, Estes/YMCA 85, Park City/Heber 84, Orlando Reunion/CG 83, Branson 73, Blue Ridge GQ 71.
-Research: Hilton Head, Destin/30A, WI Dells, OBX, Zon, San Diego, Yellowstone.
+Claude top 6: Gatlinburg/PF 89, Estes/YMCA 85, Park City/Heber 84, Orlando Reunion/CG 83, Branson 73, Blue Ridge GA 71.
+Research: Hilton Head, Destin/30A, WI Dells, OBX, Zion, San Diego, Yellowstone.
 
 ## Env
 
