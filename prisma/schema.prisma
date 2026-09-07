@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  name       String?
+  household  String
+  role       String    @default("member")
+  createdAt  DateTime  @default(now())
+  lodgings   Lodging[]
+  votes      Vote[]
+  sessions   Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Destination {
+  id                 String       @id @default(cuid())
+  slug               String       @unique
+  name               String
+  shortName          String
+  state              String
+  lat                Float
+  lng                Float
+  status             String       @default("research")
+  lodgingFeasibility Int
+  onSiteAmenities    Int
+  travelBurden       Int
+  kidActivities      Int
+  natureNp           Int
+  overflow           Int
+  juneCost           Int
+  totalScore         Int
+  airports           String
+  seaPattern         String?
+  summary            String
+  callout            String?
+  travelDifficulty   String
+  disqualified       Boolean      @default(false)
+  sortOrder          Int          @default(100)
+  lodgings           Lodging[]
+  attractions        Attraction[]
+}
+
+model Lodging {
+  id                     String      @id @default(cuid())
+  destinationId          String
+  destination            Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  title                  String
+  url                    String
+  source                 String      @default("other")
+  lat                    Float?
+  lng                    Float?
+  bedrooms               Int
+  bathrooms              Float?
+  sleeps                 Int
+  realBedroomsConfirmed  Boolean     @default(false)
+  hasPool                Boolean     @default(false)
+  hasGameRoom            Boolean     @default(false)
+  hasTheater             Boolean     @default(false)
+  parkingSpaces          Int?
+  dualFridge             Boolean     @default(false)
+  dualDishwasher         Boolean     @default(false)
+  priceBand              String?
+  juneAvailable          String      @default("unknown")
+  status                 String      @default("pending_score")
+  qualifies              Boolean     @default(false)
+  scoreNotes             String?
+  lodgingScore           Int?
+  imageUrl               String?
+  ogTitle                String?
+  ogDescription          String?
+  notes                  String?
+  submitterId            String?
+  submitter              User?       @relation(fields: [submitterId], references: [id], onDelete: SetNull)
+  finalized              Boolean     @default(false)
+  zeroMargin             Boolean     @default(false)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  votes                  Vote[]
+}
+
+model Attraction {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  category      String?
+  url           String?
+  age2to4       Int         @default(3)
+  age4to8       Int         @default(3)
+  age8to11      Int         @default(3)
+  rainyDay      Boolean     @default(false)
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lodgingId String
+  lodging   Lodging  @relation(fields: [lodgingId], references: [id], onDelete: Cascade)
+  rank      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lodgingId])
+  @@unique([userId, rank])
+}
+
+model TripSettings {
+  id           Int       @id @default(1)
+  primaryStart String?
+  primaryEnd   String?
+  backupStart  String?
+  backupEnd    String?
+  bookBy       String    @default("2026-09-30")
+  votingOpen   Boolean   @default(true)
+  groupSize    Int       @default(14)
+  kidsAges     String    @default("11,8,4,2")
+  minBedrooms  Int       @default(7)
+}

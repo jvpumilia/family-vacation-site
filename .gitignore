@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+/.pnp
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+nlm-debug.log*
+
+# env
+.env
+.env.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# local db
+/data/*.db
+/data/*.db-journal
